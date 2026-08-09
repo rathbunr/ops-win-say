@@ -1,4 +1,0 @@
----
-# roles/ansible_win_say/defaults/main.yml
-speak_message: "Deployment in progress."
-speak_voice: "Microsoft David Desktop"

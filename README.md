@@ -44,15 +44,14 @@ The `survey_greeting_choice` variable defaults to `space2001` if not provided. I
 ```
 ops-win-say/
 ├── README.md
-├── playbooks/
-│   └── notify_greeting.yml
-└── roles/
-    └── ansible_win_say/
-        ├── defaults/
-        │   └── main.yml
-        └── tasks/
-            └── main.yml
+└── playbooks/
+    └── notify_greeting.yml
 ```
+
+## AAP Job Template Configuration
+
+- **Connection type:** Ensure the template uses a Machine credential with WinRM access (e.g. `svc_ansible_win`)
+- **Extra variables or inventory group_vars** should include your standard WinRM connection variables (`ansible_connection: winrm`, `ansible_port: 5986`, etc.)
 
 ## Adding New Themes
 

@@ -72,10 +72,12 @@
           Automating the automation, because manual configuration is so last decade.
           Sit back, grab a coffee, and let the playbooks do the heavy lifting.
 
-  roles:
-    - role: ansible_win_say
-      vars:
-        # Dynamically pull the message and voice based on the survey choice.
-        # Falls back to 'snarky' if an invalid key is passed.
-        speak_message: "{{ (greetings_library[survey_greeting_choice] | default(greetings_library['snarky'])).message }}"
-        speak_voice: "{{ (greetings_library[survey_greeting_choice] | default(greetings_library['snarky'])).voice }}"
+  tasks:
+    - name: Set active greeting
+      ansible.builtin.set_fact:
+        active_greeting: "{{ greetings_library[survey_greeting_choice] | default(greetings_library['snarky']) }}"
+
+    - name: Speak greeting message
+      community.windows.win_say:
+        msg: "{{ active_greeting.message }}"
+        voice: "{{ active_greeting.voice }}"

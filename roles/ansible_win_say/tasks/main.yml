@@ -1,9 +1,0 @@
----
-# roles/ansible_win_say/tasks/main.yml
-# Thin wrapper around community.windows.win_say.
-# Expects: speak_message (string), speak_voice (string)
-
-- name: Speak greeting message
-  community.windows.win_say:
-    msg: "{{ speak_message }}"
-    voice: "{{ speak_voice }}"
