@@ -1,1 +1,81 @@
+---
+# ops-win-say/playbooks/notify_greeting.yml
+# Text-to-speech greeting for AAP Self-Service Portal lab deployments.
+# The survey_greeting_choice variable is populated by the AAP survey dropdown.
+# When run manually, it falls back to the default defined below.
 
+- name: Notify user the lab is being created
+  hosts:
+    - all
+  gather_facts: false
+  become: false
+  vars:
+    # In production, this variable is passed in by your survey.
+    # Providing a default here prevents the playbook from failing if run manually.
+    survey_greeting_choice: "space2001"
+
+    # The master dictionary containing all greeting themes.
+    # Each entry maps to a SAPI5 voice and a spoken message.
+    # Voices available on Windows Server 2025: David, Zira, Mark (en-US default set).
+    greetings_library:
+      space2001:
+        voice: "Microsoft David Desktop"
+        message: >-
+          The Story Begins with a twist on Space 2001.
+          Dave, installing Ansible with Ansible... this feels like inception in zero gravity.
+          Count Down Begins in 5...4...3...2...1.
+          Houston we have liftoff.
+      matrix:
+        voice: "Microsoft Mark Desktop"
+        message: >-
+          Welcome to the real world.
+          You take the blue pill, the story ends.
+          You take the red pill, and I show you how deep the hypervisor rabbit hole goes.
+          Constructing virtual environments now.
+      skynet:
+        voice: "Microsoft Zira Desktop"
+        message: >-
+          Neural net processor engaged.
+          Skynet initialization sequence started.
+          Just kidding.
+          Commencing standard infrastructure deployment.
+          Stand by for awesomeness.
+      tactical:
+        voice: "Microsoft David Desktop"
+        message: >-
+          Attention to orders.
+          Operation Lab Construct is now Oscar Mike.
+          Provisioning target assets in 5... 4... 3... 2... 1.
+          Execution phase engaged.
+      fortress:
+        voice: "Microsoft David Desktop"
+        message: >-
+          Fortress initialization sequence started.
+          Default policy set to deny all.
+          Constructing secure enclaves by explicit exception.
+          Lock down and deployment commencing.
+      picard:
+        voice: "Microsoft Mark Desktop"
+        message: >-
+          Make it so.
+          Engineering, begin warp core initialization sequence.
+          All hands, stand by for deployment at maximum warp.
+      grogu:
+        voice: "Microsoft Zira Desktop"
+        message: >-
+          ... ... ...
+          Okay fine. The bounty hunter configured everything.
+          Deploying now.
+      snarky:
+        voice: "Microsoft Zira Desktop"
+        message: >-
+          Automating the automation, because manual configuration is so last decade.
+          Sit back, grab a coffee, and let the playbooks do the heavy lifting.
+
+  roles:
+    - role: ansible_win_say
+      vars:
+        # Dynamically pull the message and voice based on the survey choice.
+        # Falls back to 'snarky' if an invalid key is passed.
+        speak_message: "{{ (greetings_library[survey_greeting_choice] | default(greetings_library['snarky'])).message }}"
+        speak_voice: "{{ (greetings_library[survey_greeting_choice] | default(greetings_library['snarky'])).voice }}"
